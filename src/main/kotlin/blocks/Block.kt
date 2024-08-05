@@ -15,6 +15,6 @@ data class Block(
     }
 
     fun blockHash(): String{
-        return "${previousHash}${data}${timestamp}".takeHash()
+        return "${previousHash}${data}${timestamp}$salt".takeHash()
     }
 }

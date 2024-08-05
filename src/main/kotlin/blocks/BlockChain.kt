@@ -27,11 +27,28 @@ class BlockChain {
 
         var mining: Block = block.copy()
         while (!isMined(mining)) {
-            mining = block.copy(salt = mining.salt + 1)
+            mining = mining.copy(salt = mining.salt + 1)
         }
         println("Mined: $mining")
         return mining
+    }
 
-
+    fun isValid(): Boolean {
+        when {
+            chain.isEmpty() -> return true
+            chain.size == 1 -> return chain[0].hash == chain[0].blockHash()
+            else -> {
+                for (i in 1 until chain.size) {
+                    val previousBlock = chain[i - 1]
+                    val currentBlock = chain[i]
+                    when {
+                        currentBlock.hash != currentBlock.blockHash() -> return false
+                        currentBlock.previousHash != previousBlock.blockHash() -> return  false
+                        !(isMined(previousBlock) && isMined(currentBlock)) -> return false
+                    }
+                }
+                return true
+            }
+        }
     }
 }
